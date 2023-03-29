@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<head>
+    <link href="afics.css" rel='stylesheet'>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="one">
+            <p id="first">
+                Demographics
+            </p>
+             
+        </div>
+        <div class="two">
+            <p>
+                Patient is a <span id="age"></span> year old <span id="gender_text"></span>
+
+                <br>
+
+                Admission date: <span id="admit_date_text"></span>
+            </p>
+        </div>
+    </div>
+
+    <form id="general_info">
+        <p>Age:</p><input type="text" id="ageBox" placeholder="Add text..."/>
+        <p>Gender:
+            <div>
+                <input type="radio" name="gender_radio" value="male" id="male">
+                <label for="male">Male</label>
+            </div>
+            <div>
+                <input type="radio" name="gender_radio" value="female" id="female">
+                <label for="female">Female</label>
+            </div>
+            
+        </p>
+        <p>
+            Admission Date:
+        <input type="date" id="admit_date"/>
+
+        <br/><br/><input type="submit" id="addButton" value="Fill in Data" />
+        </p>
+
+        <label for="chkCardio">
+            <input type="checkbox" id="chkCardio" onclick="ShowHideDiv(this)" />
+            Cardiology
+        </label>
+        
+        <div id="dvCardio" style="display: none">
+            <ul>
+                <li>Atrial Fibrillation</li>
+                <li>Congestive Heart Failure</li>
+                <li>Coronary Artery Disease</li>
+                <li>Cardiomyopathy</li>
+            </ul>
+    </form>   
+    
+    <script src="testerscr.js"></script>
+</body>
+<footer>
+    <a href="index.html">Return home</a>
+</footer>
