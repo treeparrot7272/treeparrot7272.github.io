@@ -1,7 +1,6 @@
-import annualStrokeRisk from "./chadsScoreData";
-let annual = require('./chadsScoreData')
-
+import annualStrokeRisk from "./chadsScoreData.js";
 let riskFactors = ['CHF','Hypertension', 'Age', 'Diabetes', 'Stroke']
+
 
 renderRadioButtons(riskFactors, 'CHADS');
 
@@ -32,6 +31,7 @@ function renderRadioButtons(labels, groupName) {
 
         //step E, append the div to the container
         container.appendChild(divElement);
+        
 
        
         
@@ -48,13 +48,17 @@ function updateResults() {
     let message = ''
     riskChosen.forEach(risks => {
         message += risks.value + ', '
+        
     })
+    
     //add a period to the end, allows for regex
-    message += '.'
+    message += '.' 
+    
 
     //take out last , and put in period
-    newMessage = message.replace(/, \./i, '.')
-    if (riskChosen.length > 1) {newMessage = newMessage.replace(/\w+\./, 'and $&')}
+    //newMessage = message.replace(/, \./i, '.')
+    if (riskChosen.length > 1) {message = message.replace(/\w+\./, 'and $&')}
+    
     
 
     //calculate chads score
@@ -69,10 +73,8 @@ function updateResults() {
     //render nothing if nothing is selected
     if (!riskChosen) {return; }
 
-
-
     //render choice onto the screen in the chadsScore id area and CHADS score
-    document.getElementById("chadsScore").innerText = `You have selected ${newMessage} This pertains to a CHADS score of ${chadsScore}. This means the patient has a ${annual} annual risk of stroke.`
+    document.getElementById("chadsScore").innerText = `You have selected ${message} This pertains to a CHADS score of ${chadsScore}. ${annualStrokeRisk['0']['noTx']}`
 }
-console.log(annualStrokeRisk)
+
 
