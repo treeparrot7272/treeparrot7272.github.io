@@ -57,16 +57,13 @@ function updateResults() {
 
     //take out last , and put in period
     //newMessage = message.replace(/, \./i, '.')
-    if (riskChosen.length > 1) {message = message.replace(/\w+\./, 'and $&')}
+    //if (riskChosen.length > 1) {message = message.replace(/\w+\./, 'and $&')}
     
     
 
     //calculate chads score
     let chadsScore = 0
     riskChosen.forEach(risks => { chadsScore += 1});
-
-
-
     //add extra point if stroke is the last one
     if (riskChosen[riskChosen.length-1].value === 'Stroke') { chadsScore += 1}
 
@@ -74,7 +71,9 @@ function updateResults() {
     if (!riskChosen) {return; }
 
     //render choice onto the screen in the chadsScore id area and CHADS score
-    document.getElementById("chadsScore").innerText = `You have selected ${message} This pertains to a CHADS score of ${chadsScore}. ${annualStrokeRisk['0']['noTx']}`
+    document.getElementById("chadsScore").innerText = `Patient has risk factors of ${message} This pertains to a CHADS score of ${chadsScore}. Without anticoagulation, annual risk of stroke is ${annualStrokeRisk[chadsScore]['noTx']}%. With therapy, this will come down to  ${annualStrokeRisk[chadsScore]['warfarin']}%.`
+
+    document.getElementById("pmhxFormat").innerText = `Atrial Fibrillation: \r -----CHADS: ${chadsScore}`
 }
 
 
