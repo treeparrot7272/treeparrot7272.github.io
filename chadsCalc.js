@@ -1,69 +1,50 @@
-import annualStrokeRisk from "./chadsScoreData.js";
-let riskFactors = ['CHF','Hypertension', 'Age', 'Diabetes', 'Stroke']
+import { riskFactors, annualStrokeRisk, anticoagulation } from "./DataSets/chadsScoreData.js";
+
+import { renderCheckboxList, createSelection, createTextInput } from "./StructureBuilders/renderInputs.js";
+
+document.addEventListener('click', updateResults);
+
+renderCheckboxList(riskFactors, 'CHADS');
+
+createSelection(anticoagulation)
 
 
-renderRadioButtons(riskFactors, 'CHADS');
 
-function renderRadioButtons(labels, groupName) {
-    const container = document.createElement('section');
-    container.setAttribute('id', `${groupName}Inputs`);
 
-        labels.forEach(label => {
-        //step A, create the div
-        let divElement = document.createElement('div');
-        divElement.setAttribute('class', 'option');
-
-        //step B, create the radio buttons
-        let inputElement = document.createElement('input');
-        inputElement.setAttribute('type', 'checkbox');
-        inputElement.setAttribute('name', groupName);
-        inputElement.setAttribute('value', label);
-        divElement.appendChild(inputElement);
-
-        //step C, create the labels
-        let labelElement = document.createElement('label')
-        labelElement.setAttribute('for', label);
-        labelElement.innerText = label
-        divElement.appendChild(labelElement);
-
-        //step D, update the results with an eventListener
-        inputElement.addEventListener('click', updateResults);
-
-        //step E, append the div to the container
-        container.appendChild(divElement);
-        
-
-       
-        
-
-    })
-    document.querySelector('main').prepend(container);
-}
+//create a checkbox list out of an array
 
 function updateResults() {
+    //set chadsScore variable
+    let chadsScore = 0
 
-    //get variables
     //tabulate what has been scored
     const riskChosen = document.querySelectorAll("input[name='CHADS']:checked");
-    let message = ''
-    riskChosen.forEach(risks => {
-        message += risks.value + ', '
-        
-    })
+    riskChosen.forEach(risks => { chadsScore += 1});
     
-    //add a period to the end, allows for regex
+    //formulate message
+    let message = ''
+    //create message with each selection, then add a comma
+    riskChosen.forEach(risks => {
+        message += risks.value + ', '    })
+        //add a period to the end, allows for regex
     message += '.' 
     
 
     //take out last , and put in period
-    //newMessage = message.replace(/, \./i, '.')
-    //if (riskChosen.length > 1) {message = message.replace(/\w+\./, 'and $&')}
+    message = message.replace(/,\s\./i, '.')
+    if (riskChosen.length > 1) {message = message.replace(/\w+\./, 'and $&')}
     
-    
+    let chadsAdvice = ''
+    //calculate chads advice
+    if (chadsScore <= 4) {
+        chadsAdvice = `Without anticoagulation, annual risk of stroke is ${annualStrokeRisk[chadsScore]['noTx']}%. With therapy, this will come down to  ${annualStrokeRisk[chadsScore]['warfarin']}%.`
+    } else {
+        chadsAdvice = `Given that CHADS score is greater than 4, an annual overall risk of stroke and improvement form anticoagulation are not robustly clear in the literature. However, we know that for a CHADS score of 4 without anticoagulation, annual risk of stroke is ${annualStrokeRisk[4]['noTx']}%. With therapy, this will come down to  ${annualStrokeRisk[4]['warfarin']}%.`
+    }
 
-    //calculate chads score
-    let chadsScore = 0
-    riskChosen.forEach(risks => { chadsScore += 1});
+    
+    
+    
     //add extra point if stroke is the last one
     if (riskChosen[riskChosen.length-1].value === 'Stroke') { chadsScore += 1}
 
@@ -71,9 +52,8 @@ function updateResults() {
     if (!riskChosen) {return; }
 
     //render choice onto the screen in the chadsScore id area and CHADS score
-    document.getElementById("chadsScore").innerText = `Patient has risk factors of ${message} This pertains to a CHADS score of ${chadsScore}. Without anticoagulation, annual risk of stroke is ${annualStrokeRisk[chadsScore]['noTx']}%. With therapy, this will come down to  ${annualStrokeRisk[chadsScore]['warfarin']}%.`
+    document.getElementById("chadsScore").innerText = `Patient has risk factors of ${message} This pertains to a CHADS score of ${chadsScore}. ${chadsAdvice}`
 
-    document.getElementById("pmhxFormat").innerText = `Atrial Fibrillation: \r -----CHADS: ${chadsScore}`
+    document.getElementById("pmhxFormat").innerText = `Atrial Fibrillation: \r -----CHADS: ${chadsScore} \r -----${document.getElementById('Choices').value}`
 }
-
 
